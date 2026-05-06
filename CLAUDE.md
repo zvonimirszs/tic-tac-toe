@@ -25,6 +25,24 @@ Edit `config.json` to set defaults before the server starts:
 
 Players can also change all settings at runtime via the in-page config panel without restarting the server.
 
+## Git Workflow
+
+After completing any meaningful change (new feature, bug fix, config update), always:
+
+1. Stage only relevant files — never `git add .` blindly
+2. Commit locally with a clean, descriptive message (imperative mood, under 72 chars subject line)
+3. Push to `origin/master` immediately so work is never lost
+
+```bash
+git add <files>
+git commit -m "Short imperative summary
+
+Optional longer explanation if the why is non-obvious."
+git push
+```
+
+Never batch unrelated changes into one commit. Each commit should represent one logical unit of work.
+
 ## Architecture
 
 Pure client-side app — no backend, no build step, no bundler.
