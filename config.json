@@ -1,0 +1,6 @@
+{
+  "boardSize": 3,
+  "winLength": 3,
+  "playerX": "Igrač X",
+  "playerO": "Igrač O"
+}

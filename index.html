@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <p id="config-info">Učitavanje konfiguracije...</p>
+
+  <div id="status"></div>
+
+  <div id="board"></div>
+
+  <div id="scoreboard">
+    <div class="score-block x">
+      <div class="label" id="label-x">Igrač X</div>
+      <div class="value" id="score-x">0</div>
+    </div>
+    <div class="score-block draw">
+      <div class="label">Neriješeno</div>
+      <div class="value" id="score-draw">0</div>
+    </div>
+    <div class="score-block o">
+      <div class="label" id="label-o">Igrač O</div>
+      <div class="value" id="score-o">0</div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <button id="btn-restart">Nova igra</button>
+    <button id="btn-reset-score">Resetiraj rezultat</button>
+  </div>
+
+  <div id="config-panel">
+    <h2>Konfiguracija (config.json)</h2>
+    <div class="config-row">
+      <label>Veličina ploče (2–15)</label>
+      <input type="number" id="input-size" min="2" max="15" value="3" />
+    </div>
+    <div class="config-row">
+      <label>Pobjeda (u nizu)</label>
+      <input type="number" id="input-win" min="2" max="15" value="3" />
+    </div>
+    <div class="config-row">
+      <label>Ime igrača X</label>
+      <input type="text" id="input-px" value="Igrač X" />
+    </div>
+    <div class="config-row">
+      <label>Ime igrača O</label>
+      <input type="text" id="input-po" value="Igrač O" />
+    </div>
+    <button id="btn-apply">Primijeni i resetiraj</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
