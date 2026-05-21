@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+@.claude/rules/api-conventions.md
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Running the Game
@@ -18,7 +20,7 @@ Edit `config.json` to set defaults before the server starts:
 
 | Field | Default | Constraint |
 |-------|---------|------------|
-| `boardSize` | 3 | 2–15 |
+| `boardSize` | 3 | 2–5 |
 | `winLength` | 3 | 2–boardSize |
 | `playerX` | "Igrač X" | display name |
 | `playerO` | "Igrač O" | display name |
@@ -51,6 +53,16 @@ Pure client-side app — no backend, no build step, no bundler.
 - **`game.js`** — all logic and state; no external libraries
 - **`style.css`** — dark-theme styling; responsive cell sizing via CSS Grid
 
+## Architecture Philosophy
+We follow Clean Architecture with CQRS separation:
+- **Domain** has zero dependencies - pure business logic
+- **Application** orchestrates use cases via Mediator handlers
+- **Infrastructure** implements interfaces defined in Application
+- **Api** is thin - just endpoint definitions and DI wiring
+
+Why CQRS? We need different read/write models for performance.
+Why Mediator? Decouples handlers from HTTP layer, enables pipeline behaviors, source-generated for better performance.
+
 ### State model (`game.js`)
 Global variables drive the entire UI: `config`, `board` (2D array), `currentPlayer`, `gameOver`, `scores`.
 
@@ -60,3 +72,50 @@ Global variables drive the entire UI: `config`, `board` (2D array), `currentPlay
 - `renderBoard()` — tears down and rebuilds the entire grid DOM; cell size (48–80 px) and font size scale with `boardSize`
 - `checkWin(row, col)` — scans 4 directions bi-directionally from the last-placed mark; returns winning cell coordinates or `null`
 - `applyNewConfig()` — validates and applies UI panel inputs, resets scores, reinitializes board
+
+
+## Tech Stack
+- .NET 10, ASP.NET Core Minimal APIs
+- Entity Framework Core 10 with PostgreSQL
+- Mediator for CQRS pattern (source-generated)
+- FluentValidation for request validation
+- Scalar for API documentation (OpenAPI)
+
+
+## Commands
+| Command | Purpose |
+|---------|---------|
+| npm start | Start dev server + API concurrently |
+| npm test | Run Vitest test suite |
+| npm run lint | ESLint + Prettier check |
+| npm run db:migrate | Apply database migrations |
+| npm run build | Production build |
+- Build: `dotnet build`
+- Test: `dotnet test --no-build`
+- Run: `dotnet run --project src/Api`
+- Migrations: `dotnet ef migrations add <Name> --project src/Infrastructure --startup-project src/Api`
+
+## Conventions
+- Use functional components with hooks, never class components
+- All API responses follow { data, error, meta } envelope format
+- File names use kebab-case: user-profile.tsx, not UserProfile.tsx
+- Database queries go through the ORM, never write raw SQL
+- All user-facing strings must use the i18n translation function t()
+
+## Structure
+- src/pages/ - web page
+- src/components/ - React components (interactive, use client:load)
+- worker/ - Cloudflare Worker backend (separate from frontend)
+- migrations/ - SQL migration files for D1
+- `src/Api/` - Entry point, endpoints, middleware
+- `src/Application/` - Commands, queries, handlers, DTOs
+- `src/Domain/` - Entities, value objects, domain events
+- `src/Infrastructure/` - EF Core, external integrations
+- `tests/` - Unit and integration tests
+
+## Rules
+- DO: Use Zod for all input validation
+- DO: Add error handling to every async function
+- DON'T: Use any - always provide explicit TypeScript types
+- DON'T: Import from relative paths across module boundaries, use path aliases
+- DON'T: Add console.log statements, use the logger utility

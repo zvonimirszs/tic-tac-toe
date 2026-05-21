@@ -151,7 +151,7 @@ function applyNewConfig() {
   const px = document.getElementById('input-px').value.trim() || 'Igrač X';
   const po = document.getElementById('input-po').value.trim() || 'Igrač O';
 
-  if (isNaN(size) || size < 2 || size > 15) return alert('Veličina ploče mora biti između 2 i 15.');
+  if (isNaN(size) || size < 2 || size > 5) return alert('Veličina ploče mora biti između 2 i 5.');
   if (isNaN(win) || win < 2 || win > size) return alert(`Duljina pobjede mora biti između 2 i ${size}.`);
 
   config.boardSize = size;
